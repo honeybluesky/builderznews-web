@@ -55,16 +55,31 @@ export function NewsFeed() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentVCIndex, setCurrentVCIndex] = useState(0);
+  const [shuffledVCFirms, setShuffledVCFirms] = useState<string[]>([]);
+
+  // Fisher-Yates shuffle algorithm
+  const shuffleArray = (array: string[]) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  useEffect(() => {
+    setShuffledVCFirms(shuffleArray(VC_FIRMS));
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isLoading) {
       interval = setInterval(() => {
-        setCurrentVCIndex((prev) => (prev + 1) % VC_FIRMS.length);
+        setCurrentVCIndex((prev) => (prev + 1) % shuffledVCFirms.length);
       }, 2000);
     }
     return () => clearInterval(interval);
-  }, [isLoading]);
+  }, [isLoading, shuffledVCFirms]);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -124,11 +139,11 @@ export function NewsFeed() {
             </div>
             <div className="h-16 flex items-center justify-center">
               <p className="loading-text text-lg font-medium text-primary">
-                {VC_FIRMS[currentVCIndex]}
+                {shuffledVCFirms[currentVCIndex] || VC_FIRMS[0]}
               </p>
             </div>
             <p className="first-time-notice">
-              It may take 10-20 seconds for the first time loading
+              Searching and organizing news for you, it may take 10-20 seconds, thank you for your patience...
             </p>
           </div>
         </div>

@@ -78,10 +78,10 @@ export function NewsFeed({ dateRange }: NewsFeedProps) {
   }, []);
 
   return (
-    <div className="grid gap-8">
+    <div className="grid gap-6">
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <div className="bg-background/80 backdrop-blur-sm rounded-full p-4 shadow-lg border border-border/10">
+          <div className="bg-white/5 backdrop-blur-sm rounded-full p-4 shadow-lg border border-white/10">
             <Loader2 className="h-8 w-8 text-primary animate-spin" />
           </div>
         </div>
@@ -89,11 +89,11 @@ export function NewsFeed({ dateRange }: NewsFeedProps) {
         news.map((item) => (
           <Card 
             key={item.id} 
-            className="gradient-card p-6 hover:scale-[1.01] transition-all duration-300 cursor-pointer border-border/10 overflow-hidden relative group animate-fade-in"
+            className="gradient-card hover:scale-[1.01] transition-all duration-300 cursor-pointer overflow-hidden relative group animate-fade-in"
           >
-            <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex flex-col md:flex-row gap-8 p-6">
               <div className="w-full md:w-1/3">
-                <div className="relative h-56 md:h-full rounded-xl overflow-hidden">
+                <div className="relative h-48 md:h-full rounded-xl overflow-hidden">
                   <img 
                     src={item.image} 
                     alt={item.title}
@@ -102,22 +102,22 @@ export function NewsFeed({ dateRange }: NewsFeedProps) {
                   <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
                 </div>
               </div>
-              <div className="w-full md:w-2/3 space-y-6">
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold leading-tight group-hover:text-primary transition-colors">
+              <div className="w-full md:w-2/3 space-y-4">
+                <div className="space-y-3">
+                  <h3 className="text-xl font-semibold leading-tight group-hover:text-primary transition-colors">
                     {item.title}
-                    <ExternalLink className="h-5 w-5 inline ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ExternalLink className="h-4 w-4 inline ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </h3>
-                  <p className="text-muted-foreground text-lg leading-relaxed">{item.description}</p>
+                  <p className="text-white/70 text-base leading-relaxed">{item.description}</p>
                 </div>
-                <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center justify-between text-sm pt-2">
                   <div className="flex items-center space-x-2">
                     <Newspaper className="h-4 w-4 text-primary" />
                     <span className="text-primary font-medium">{item.category}</span>
                   </div>
                   <div className="flex items-center gap-6">
-                    <time className="text-muted-foreground">{item.date}</time>
-                    <span className="funding-badge px-4 py-1.5 rounded-full text-primary font-medium">
+                    <time className="text-white/50">{item.date}</time>
+                    <span className="funding-badge px-3 py-1 rounded-full text-primary font-medium">
                       {item.funding}
                     </span>
                   </div>

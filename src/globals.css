@@ -88,3 +88,40 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--primary));
 }
+
+@keyframes breathe {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(10px); }
+  50% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+.loading-container {
+  background: linear-gradient(
+    -45deg,
+    rgba(56, 189, 248, 0.2),
+    rgba(99, 102, 241, 0.2),
+    rgba(168, 85, 247, 0.2),
+    rgba(236, 72, 153, 0.2)
+  );
+  background-size: 400% 400%;
+  animation: breathe 8s ease infinite;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+.loading-text {
+  animation: fadeInOut 2s ease-in-out infinite;
+}
+
+.first-time-notice {
+  @apply text-white/70 text-sm mt-4;
+}

@@ -25,9 +25,55 @@ interface NewsFeedProps {
   dateRange: DateRange;
 }
 
+const VC_FIRMS = [
+  "Sequoia Capital",
+  "Andreessen Horowitz (a16z)",
+  "Lightspeed Venture Partners",
+  "Accel",
+  "Benchmark",
+  "Kleiner Perkins",
+  "Greylock Partners",
+  "Bessemer Venture Partners",
+  "General Catalyst",
+  "Index Ventures",
+  "Union Square Ventures",
+  "GV (Google Ventures)",
+  "Founders Fund",
+  "New Enterprise Associates (NEA)",
+  "Institutional Venture Partners (IVP)",
+  "Battery Ventures",
+  "Redpoint Ventures",
+  "Menlo Ventures",
+  "Draper Fisher Jurvetson (DFJ)",
+  "Sapphire Ventures",
+  "Insight Partners",
+  "Norwest Venture Partners",
+  "DCM Ventures",
+  "Matrix Partners",
+  "Khosla Ventures",
+  "Madrona Venture Group",
+  "Upfront Ventures",
+  "True Ventures",
+  "Felicis Ventures",
+  "Charles River Ventures (CRV)",
+  "8VC",
+  "GGV Capital"
+];
+
 export function NewsFeed({ dateRange }: NewsFeedProps) {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentVCIndex, setCurrentVCIndex] = useState(0);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isLoading) {
+      interval = setInterval(() => {
+        setCurrentVCIndex((prev) => (prev + 1) % VC_FIRMS.length);
+      }, 2000);
+    }
+    return () => clearInterval(interval);
+  }, [isLoading]);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -80,9 +126,19 @@ export function NewsFeed({ dateRange }: NewsFeedProps) {
   return (
     <div className="grid gap-6">
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="bg-white/5 backdrop-blur-sm rounded-full p-4 shadow-lg border border-white/10">
-            <Loader2 className="h-8 w-8 text-primary animate-spin" />
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="loading-container rounded-2xl p-8 w-full max-w-md text-center space-y-4">
+            <div className="flex items-center justify-center mb-6">
+              <Loader2 className="h-8 w-8 text-primary animate-spin" />
+            </div>
+            <div className="h-16 flex items-center justify-center">
+              <p className="loading-text text-lg font-medium text-primary">
+                {VC_FIRMS[currentVCIndex]}
+              </p>
+            </div>
+            <p className="first-time-notice">
+              It may take 10-20 seconds for the first time loading
+            </p>
           </div>
         </div>
       ) : (

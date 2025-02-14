@@ -29,7 +29,7 @@ function App() {
                 <Sparkles className="h-4 w-4 text-primary absolute -top-1 -right-1" />
               </div>
               <h1 className="text-base sm:text-lg font-semibold tracking-tight hidden sm:block">
-                Stay Updated with <span className="text-primary">Builder</span> News
+                Stay Updated with <span className="text-primary">BuilderZ</span> News
               </h1>
               <div className="hidden lg:flex items-center space-x-6 ml-6">
                 <div className="flex items-center space-x-2">

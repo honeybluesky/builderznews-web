@@ -118,8 +118,13 @@ export function NewsFeed({ dateRange }: NewsFeedProps) {
                   <div className="flex items-center gap-6">
                     <time className="text-white/50">{item.date}</time>
                     <span className="funding-badge px-3 py-1 rounded-full text-primary font-medium">
-                      {item.funding}
+                      {item.leadInvestors.join(', ')}
                     </span>
+                    {item.funding !== "Not specified" && (
+                      <span className="funding-badge px-3 py-1 rounded-full text-primary font-medium">
+                        {item.funding}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

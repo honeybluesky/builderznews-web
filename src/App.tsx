@@ -70,7 +70,7 @@ function App() {
 
       {/* Hero Section */}
       <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-32">
-        <div className="absolute inset-0 h-[500px] overflow-hidden">
+        <div className="absolute inset-0 h-[300px] sm:h-[500px] overflow-hidden">
           <img
             src="/1500x250.png"
             alt="BuilderzNews Hero"

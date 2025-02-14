@@ -2,18 +2,10 @@ import { Toaster } from 'sonner'
 import { NewsFeed } from './components/news-feed'
 import { HubspotForm } from './components/hubspot-form'
 import { Sparkles, Calendar, CheckCircle2, Mail, Twitter } from "lucide-react";
-import { format, subDays } from "date-fns";
 import { useState } from 'react';
 
 function App() {
   const [showSubscribeModal, setShowSubscribeModal] = useState(false);
-  const today = new Date();
-  const threeDaysAgo = subDays(today, 14);
-  
-  const dateRange = {
-    start: format(threeDaysAgo, 'MMM d'),
-    end: format(today, 'MMM d, yyyy')
-  };
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,7 +90,6 @@ function App() {
           <div className="flex items-center space-x-3 text-base sm:text-lg mb-8">
             <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
             <span className="font-medium text-white/90">
-              {/* News from <span className="text-primary">{dateRange.start}</span> to <span className="text-primary">{dateRange.end}</span> */}
               News from last two weeks
             </span>
           </div>

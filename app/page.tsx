@@ -28,7 +28,7 @@ export default function Home() {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="w-40 md:w-56 px-4 py-2 text-sm rounded-full bg-gray-300 border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  className="w-40 md:w-56 px-4 py-2 text-sm rounded-full bg-secondary text-foreground border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-muted-foreground"
                 />
                 <button className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-full font-medium hover:opacity-90 transition-opacity flex items-center space-x-2">
                   <Mail className="h-4 w-4" />

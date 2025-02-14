@@ -1,0 +1,116 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.env
+.venv
+.python-version
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.project
+.classpath
+.settings/
+
+# Testing
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Logs
+*.log
+logs/
+log/
+
+# Local development
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# DynamoDB Local
+.dynamodb/
+
+# Distribution / packaging
+.Python
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Misc
+.DS_Store
+Thumbs.db 
+
+node_modules/
+
+# Next.js
+.next/
+out/
+build/
+.next
+next-env.d.ts
+
+# Vercel
+.vercel
+
+# Production
+/build
+
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env*.local
+
+# Misc
+.DS_Store
+*.pem
+
+# TypeScript
+*.tsbuildinfo

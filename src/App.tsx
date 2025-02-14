@@ -95,7 +95,7 @@ function App() {
               News from <span className="text-primary">{dateRange.start}</span> to <span className="text-primary">{dateRange.end}</span>
             </span>
           </div>
-          <NewsFeed dateRange={dateRange} />
+          <NewsFeed />
         </div>
       </main>
 

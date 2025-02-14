@@ -16,15 +16,6 @@ interface NewsItem {
   sourceUrl: string;
 }
 
-interface DateRange {
-  start: string;
-  end: string;
-}
-
-interface NewsFeedProps {
-  dateRange: DateRange;
-}
-
 const VC_FIRMS = [
   "Sequoia Capital",
   "Andreessen Horowitz (a16z)",
@@ -60,7 +51,7 @@ const VC_FIRMS = [
   "GGV Capital"
 ];
 
-export function NewsFeed({ dateRange }: NewsFeedProps) {
+export function NewsFeed() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentVCIndex, setCurrentVCIndex] = useState(0);

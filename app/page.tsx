@@ -1,4 +1,5 @@
-import { TrendingUp, Database, Sparkles, Calendar, CheckCircle2, Zap, Mail, Search } from "lucide-react";
+import { TrendingUp, Sparkles, Calendar, CheckCircle2, Zap, Mail, Search, Twitter } from "lucide-react";
+import Image from "next/image";
 import { format, subDays } from "date-fns";
 import { NewsFeed } from "./components/news-feed";
 
@@ -17,12 +18,27 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-4">
                 <div className="relative">
-                  <Database className="h-7 w-7 text-primary animate-pulse" />
-                  <Sparkles className="h-4 w-4 text-primary absolute -top-1 -right-1" />
+                  <Image
+                    src="/logo_400x400.jpg"
+                    alt="BuilderzNews Logo"
+                    width={88}
+                    height={88}
+                    className="rounded-full ring-3 ring-primary/20 hover:ring-primary/40 transition-all shadow-lg"
+                    priority
+                  />
+                  <Sparkles className="h-7 w-7 text-primary absolute -top-2 -right-2" />
                 </div>
-                <span className="text-2xl font-bold tracking-tight glow-text">BuilderzNews</span>
+                <a 
+                  href="https://twitter.com/builderznews" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center space-x-2 px-4 py-2 rounded-full bg-secondary/50 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all group"
+                >
+                  <Twitter className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-medium hidden md:inline">Follow us</span>
+                </a>
               </div>
               <form className="flex items-center space-x-2">
                 <input
@@ -50,18 +66,12 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 md:pt-28 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-52 md:pt-44 pb-16">
         <div className="grid grid-cols-1 gap-12">
           <section className="space-y-8 animate-fade-in">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-primary" />
-                <h2 className="text-2xl md:text-4xl font-bold tracking-tight">Latest Startup News</h2>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                <span>Showing news from {dateRange.start} to {dateRange.end}</span>
-              </div>
+            <div className="flex items-center space-x-3 text-base md:text-lg bg-gradient-to-r from-background/95 to-background/80 backdrop-blur-sm py-3 px-5 rounded-2xl shadow-lg border border-border/20 hover:border-primary/20 transition-all">
+              <Calendar className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              <span className="font-medium">Showing news from <span className="text-primary">{dateRange.start}</span> to <span className="text-primary">{dateRange.end}</span></span>
             </div>
             <NewsFeed />
           </section>

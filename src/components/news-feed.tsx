@@ -151,11 +151,21 @@ export function NewsFeed() {
               </div>
               <div className="w-full md:w-2/3 space-y-4">
                 <div className="space-y-3">
-                  <h3 className="text-xl font-semibold leading-tight group-hover:text-primary transition-colors">
-                    {item.title}
-                    <ExternalLink className="h-4 w-4 inline ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <h3 className="text-xl font-semibold leading-tight">
+                    <a 
+                      href={item.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-primary transition-colors inline-flex items-center"
+                    >
+                      {item.title}
+                      <ExternalLink className="h-4 w-4 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </a>
                   </h3>
-                  <p className="text-white/70 text-base leading-relaxed">{item.description}</p>
+                  <p className="text-white/70 text-base leading-relaxed line-clamp-3 overflow-hidden relative whitespace-pre-line">
+                    {item.description}
+                    <span className="absolute bottom-0 right-0 w-full h-6 bg-gradient-to-t from-background to-transparent" />
+                  </p>
                 </div>
                 <div className="flex items-center justify-between text-sm pt-2">
                   <div className="flex items-center space-x-2">

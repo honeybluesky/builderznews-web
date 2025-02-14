@@ -138,18 +138,8 @@ export function NewsFeed() {
             key={item.id} 
             className="gradient-card hover:scale-[1.01] transition-all duration-300 cursor-pointer overflow-hidden relative group animate-fade-in"
           >
-            <div className="flex flex-col md:flex-row gap-8 p-6">
-              <div className="w-full md:w-1/3">
-                <div className="relative h-48 md:h-full rounded-xl overflow-hidden">
-                  <img 
-                    src={item.image} 
-                    alt={item.title}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
-                </div>
-              </div>
-              <div className="w-full md:w-2/3 space-y-4">
+            <div className="flex flex-col p-6">
+              <div className="w-full space-y-4">
                 <div className="space-y-3">
                   <h3 className="text-xl font-semibold leading-tight">
                     <a 

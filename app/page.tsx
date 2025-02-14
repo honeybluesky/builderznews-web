@@ -14,9 +14,31 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background">
-      <nav className="border-b border-border/10 backdrop-blur-xl fixed w-full z-50 bg-background/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col space-y-4">
+      <nav className="border-b border-border/10 fixed w-full z-50">
+        <div className="h-[200px] sm:h-[250px] md:h-[300px] w-full relative overflow-hidden">
+          <Image
+            src="/1500x250.png"
+            alt="BuilderzNews Background Mobile"
+            fill
+            className="object-contain object-top w-full block md:hidden"
+            priority
+            sizes="100vw"
+            quality={100}
+          />
+          <Image
+            src="/1500x500.jpeg"
+            alt="BuilderzNews Background Desktop"
+            fill
+            className="object-cover object-center w-full hidden md:block"
+            priority
+            sizes="100vw"
+            quality={100}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background"></div>
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent"></div>
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-32">
+          <div className="flex flex-col space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="relative">
@@ -34,7 +56,7 @@ export default function Home() {
                   href="https://twitter.com/builderznews" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="flex items-center space-x-2 px-4 py-2 rounded-full bg-secondary/50 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all group"
+                  className="flex items-center space-x-2 px-4 py-2 rounded-full hover:bg-primary/10 text-primary transition-all group"
                 >
                   <Twitter className="h-5 w-5 group-hover:scale-110 transition-transform" />
                   <span className="text-sm font-medium hidden md:inline">Follow us</span>
@@ -44,7 +66,7 @@ export default function Home() {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="w-40 md:w-56 px-4 py-2 text-sm rounded-full bg-secondary text-foreground border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-muted-foreground"
+                  className="w-40 md:w-56 px-4 py-2 text-sm rounded-full bg-background/30 text-foreground border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-muted-foreground"
                 />
                 <button className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-full font-medium hover:opacity-90 transition-opacity flex items-center space-x-2">
                   <Mail className="h-4 w-4" />
@@ -53,11 +75,11 @@ export default function Home() {
               </form>
             </div>
             <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-6">
-              <div className="flex items-center space-x-1.5 text-muted-foreground hover:text-foreground transition-colors">
+              <div className="flex items-center space-x-1.5 text-foreground hover:text-primary transition-colors">
                 <CheckCircle2 className="h-4 w-4 text-primary" />
                 <span className="text-sm font-medium">Free Forever. We help builder community.</span>
               </div>
-              <div className="flex items-center space-x-1.5 text-muted-foreground hover:text-foreground transition-colors">
+              <div className="flex items-center space-x-1.5 text-foreground hover:text-primary transition-colors">
                 <CheckCircle2 className="h-4 w-4 text-primary" />
                 <span className="text-sm font-medium">Verified sources from 48 Partnered VC</span>
               </div>
@@ -66,7 +88,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-52 md:pt-44 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-64 md:pt-56 pb-16">
         <div className="grid grid-cols-1 gap-12">
           <section className="space-y-8 animate-fade-in">
             <div className="flex items-center space-x-3 text-base md:text-lg bg-gradient-to-r from-background/95 to-background/80 backdrop-blur-sm py-3 px-5 rounded-2xl shadow-lg border border-border/20 hover:border-primary/20 transition-all">

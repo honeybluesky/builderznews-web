@@ -1,42 +1,8 @@
-import { Newspaper, TrendingUp, Database, Sparkles, ExternalLink, Calendar, CheckCircle2, Zap, Mail, Search } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { TrendingUp, Database, Sparkles, Calendar, CheckCircle2, Zap, Mail, Search } from "lucide-react";
 import { format, subDays } from "date-fns";
+import { NewsFeed } from "./components/news-feed";
 
-async function getLatestNews() {
-  // This would be replaced with actual API call
-  return [
-    {
-      id: 1,
-      title: "🚀 OpenAI Secures $2B in Latest Funding Round",
-      description: "Leading AI research company continues expansion with major investment from tech giants",
-      category: "Funding",
-      date: "2024-03-20",
-      funding: "$2B",
-      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop&q=60",
-    },
-    {
-      id: 2,
-      title: "⚡ AI Startup Revolution: Edge Computing Breakthrough",
-      description: "New architecture enables 10x faster processing for AI models on edge devices",
-      category: "Technology",
-      date: "2024-03-19",
-      funding: "$75M",
-      image: "https://images.unsplash.com/photo-1676299081847-824916de7e0a?w=800&auto=format&fit=crop&q=60",
-    },
-    {
-      id: 3,
-      title: "🧬 DeepMind's Latest AI Model Shows Promise in Drug Discovery",
-      description: "Breakthrough in protein folding prediction leads to pharmaceutical industry interest",
-      category: "Research",
-      date: "2024-03-18",
-      funding: "$150M",
-      image: "https://images.unsplash.com/photo-1677442139666-28937c5489d4?w=800&auto=format&fit=crop&q=60",
-    },
-  ];
-}
-
-export default async function Home() {
-  const news = await getLatestNews();
+export default function Home() {
   const today = new Date();
   const threeDaysAgo = subDays(today, 3);
   
@@ -105,48 +71,7 @@ export default async function Home() {
                 <span>Showing news from {dateRange.start} to {dateRange.end}</span>
               </div>
             </div>
-            <div className="grid gap-8">
-              {news.map((item) => (
-                <Card 
-                  key={item.id} 
-                  className="gradient-card p-6 hover:scale-[1.01] transition-all duration-300 cursor-pointer border-border/10 overflow-hidden relative group animate-fade-in"
-                >
-                  <div className="flex flex-col md:flex-row gap-8">
-                    <div className="w-full md:w-1/3">
-                      <div className="relative h-56 md:h-full rounded-xl overflow-hidden">
-                        <img 
-                          src={item.image} 
-                          alt={item.title}
-                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
-                      </div>
-                    </div>
-                    <div className="w-full md:w-2/3 space-y-6">
-                      <div className="space-y-4">
-                        <h3 className="text-2xl font-semibold leading-tight group-hover:text-primary transition-colors">
-                          {item.title}
-                          <ExternalLink className="h-5 w-5 inline ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </h3>
-                        <p className="text-muted-foreground text-lg leading-relaxed">{item.description}</p>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center space-x-2">
-                          <Newspaper className="h-4 w-4 text-primary" />
-                          <span className="text-primary font-medium">{item.category}</span>
-                        </div>
-                        <div className="flex items-center gap-6">
-                          <time className="text-muted-foreground">{item.date}</time>
-                          <span className="funding-badge px-4 py-1.5 rounded-full text-primary font-medium">
-                            {item.funding}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
+            <NewsFeed />
           </section>
         </div>
       </div>

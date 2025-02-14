@@ -138,40 +138,41 @@ export function NewsFeed() {
             key={item.id} 
             className="gradient-card hover:scale-[1.01] transition-all duration-300 cursor-pointer overflow-hidden relative group animate-fade-in"
           >
-            <div className="flex flex-col p-6">
-              <div className="w-full space-y-4">
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold leading-tight">
+            <div className="flex flex-col p-4 sm:p-6">
+              <div className="w-full space-y-3">
+                <div className="space-y-2">
+                  <h3 className="text-lg sm:text-xl font-semibold leading-tight">
                     <a 
                       href={item.sourceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:text-primary transition-colors inline-flex items-center"
+                      className="hover:text-primary transition-colors inline-flex items-center gap-2"
                     >
                       {item.title}
-                      <ExternalLink className="h-4 w-4 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                   </h3>
-                  <p className="text-white/70 text-base leading-relaxed line-clamp-3 overflow-hidden relative whitespace-pre-line">
+                  <p className="text-white/70 text-sm sm:text-base leading-relaxed line-clamp-2 sm:line-clamp-3 overflow-hidden relative">
                     {item.description}
                     <span className="absolute bottom-0 right-0 w-full h-6 bg-gradient-to-t from-background to-transparent" />
                   </p>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-sm pt-2">
-                  <div className="flex items-center gap-2">
-                    <Newspaper className="h-4 w-4 text-primary" />
-                    <span className="text-primary font-medium">{item.category}</span>
-                    <span className="text-white/50">•</span>
+                <div className="flex flex-col gap-3 text-sm pt-1">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center gap-2">
+                      <Newspaper className="h-4 w-4 text-primary shrink-0" />
+                      <span className="text-primary font-medium">{item.category}</span>
+                    </div>
                     <time className="text-white/50">{item.date}</time>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {item.leadInvestors.map((investor, index) => (
-                      <span key={index} className="funding-badge px-2.5 py-0.5 rounded-full text-primary font-medium text-sm bg-primary/10">
+                      <span key={index} className="funding-badge px-2.5 py-1 rounded-full text-primary font-medium text-sm bg-primary/10 whitespace-nowrap">
                         {investor}
                       </span>
                     ))}
                     {item.funding !== "Not specified" && (
-                      <span className="funding-badge px-2.5 py-0.5 rounded-full text-primary font-medium text-sm bg-primary/10">
+                      <span className="funding-badge px-2.5 py-1 rounded-full text-primary font-medium text-sm bg-primary/10 whitespace-nowrap">
                         {item.funding}
                       </span>
                     )}

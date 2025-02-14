@@ -1,15 +1,23 @@
 import { Toaster } from 'sonner'
 import { NewsFeed } from './components/news-feed'
+import { HubspotForm } from './components/hubspot-form'
 import { Sparkles, Calendar, CheckCircle2, Mail, Twitter } from "lucide-react";
 import { format, subDays } from "date-fns";
+import { useState } from 'react';
 
 function App() {
+  const [showSubscribeModal, setShowSubscribeModal] = useState(false);
   const today = new Date();
   const threeDaysAgo = subDays(today, 3);
   
   const dateRange = {
     start: format(threeDaysAgo, 'MMM d'),
     end: format(today, 'MMM d, yyyy')
+  };
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowSubscribeModal(true);
   };
 
   return (
@@ -53,13 +61,11 @@ function App() {
             </div>
 
             {/* Subscribe Form */}
-            <form className="flex items-center space-x-2">
-              <input
-                type="email"
-                placeholder="Subscribe to newsletter"
-                className="w-48 sm:w-64 px-4 py-1.5 text-sm rounded-full bg-white/5 text-foreground border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-white/40"
-              />
-              <button className="px-4 py-1.5 text-sm bg-primary text-white rounded-full font-medium hover:opacity-90 transition-opacity flex items-center space-x-2">
+            <form onSubmit={handleSubscribe} className="flex items-center space-x-2">
+              <button 
+                type="submit"
+                className="px-4 py-1.5 text-sm bg-primary text-white rounded-full font-medium hover:opacity-90 transition-opacity flex items-center space-x-2"
+              >
                 <Mail className="h-4 w-4" />
                 <span className="hidden sm:inline">Subscribe</span>
               </button>
@@ -107,6 +113,10 @@ function App() {
           </div>
         </div>
       </footer>
+      
+      {showSubscribeModal && (
+        <HubspotForm onClose={() => setShowSubscribeModal(false)} />
+      )}
       
       <Toaster />
     </div>

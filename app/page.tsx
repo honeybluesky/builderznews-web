@@ -88,14 +88,14 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-64 md:pt-56 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[250px] md:pt-[320px] pb-16">
         <div className="grid grid-cols-1 gap-12">
           <section className="space-y-8 animate-fade-in">
             <div className="flex items-center space-x-3 text-base md:text-lg bg-gradient-to-r from-background/95 to-background/80 backdrop-blur-sm py-3 px-5 rounded-2xl shadow-lg border border-border/20 hover:border-primary/20 transition-all">
               <Calendar className="h-5 w-5 md:h-6 md:w-6 text-primary" />
               <span className="font-medium">Showing news from <span className="text-primary">{dateRange.start}</span> to <span className="text-primary">{dateRange.end}</span></span>
             </div>
-            <NewsFeed />
+            <NewsFeed dateRange={dateRange} />
           </section>
         </div>
       </div>

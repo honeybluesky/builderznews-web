@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Card } from "@/components/ui/card";
-import { Newspaper, ExternalLink } from "lucide-react";
-import { LoadingSpinner } from './loading-spinner';
+import { Newspaper, ExternalLink, Loader2 } from "lucide-react";
 
 interface NewsItem {
   id: number;
@@ -17,9 +16,18 @@ interface NewsItem {
   sourceUrl: string;
 }
 
-export function NewsFeed() {
+interface DateRange {
+  start: string;
+  end: string;
+}
+
+interface NewsFeedProps {
+  dateRange: DateRange;
+}
+
+export function NewsFeed({ dateRange }: NewsFeedProps) {
   const [news, setNews] = useState<NewsItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -33,18 +41,31 @@ export function NewsFeed() {
           const timestamp = parseInt(cachedTimestamp);
           if (Date.now() - timestamp < 3600000) { // 1 hour
             setNews(JSON.parse(cachedNews));
+            setIsLoading(false);
             return;
           }
         }
 
         // If no valid cache, fetch new data
-        setIsLoading(true);
-        const response = await fetch('/api/news');
+        const response = await fetch('https://wak4ubboy5.execute-api.us-east-1.amazonaws.com/recent_news?range=last_2_weeks');
         const data = await response.json();
         
+        // Transform the API response to match our UI structure
+        const transformedData = data.response.news_items.map((item: any, index: number) => ({
+          id: index + 1,
+          title: `${item.company_name} Secures ${item.funding_amount} in ${item.funding_round}`,
+          description: item.original_content,
+          category: item.industry_focus,
+          date: new Date(item.published_date).toISOString().split('T')[0],
+          funding: item.funding_amount,
+          image: `https://images.unsplash.com/photo-${1676299081847 + index}-824916de7e0a?w=800&auto=format&fit=crop&q=60`,
+          leadInvestors: item.lead_investors,
+          sourceUrl: item.source_url
+        }));
+        
         // Update state and cache
-        setNews(data);
-        sessionStorage.setItem('news', JSON.stringify(data));
+        setNews(transformedData);
+        sessionStorage.setItem('news', JSON.stringify(transformedData));
         sessionStorage.setItem('newsTimestamp', Date.now().toString());
       } catch (error) {
         console.error('Error fetching news:', error);
@@ -57,9 +78,15 @@ export function NewsFeed() {
   }, []);
 
   return (
-    <>
-      <div className="grid gap-8">
-        {news.map((item) => (
+    <div className="grid gap-8">
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <div className="bg-background/80 backdrop-blur-sm rounded-full p-4 shadow-lg border border-border/10">
+            <Loader2 className="h-8 w-8 text-primary animate-spin" />
+          </div>
+        </div>
+      ) : (
+        news.map((item) => (
           <Card 
             key={item.id} 
             className="gradient-card p-6 hover:scale-[1.01] transition-all duration-300 cursor-pointer border-border/10 overflow-hidden relative group animate-fade-in"
@@ -98,9 +125,8 @@ export function NewsFeed() {
               </div>
             </div>
           </Card>
-        ))}
-      </div>
-      {isLoading && <LoadingSpinner />}
-    </>
+        ))
+      )}
+    </div>
   );
 } 

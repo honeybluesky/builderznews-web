@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: 'BuilderzNews - Completely Free AI-Powered Startup Intel 🚀',
   description: 'Daily startup funding and tech trends monitored by AI - Completely Free. Get precise data and relevant insights without the fluff.',
   keywords: 'startup news, AI monitoring, tech trends, startup funding, tech news, free news',
+  icons: {
+    icon: '/logo_400x400_icon.ico'
+  }
 }
 
 export default function RootLayout({

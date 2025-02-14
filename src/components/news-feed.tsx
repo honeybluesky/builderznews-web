@@ -157,18 +157,21 @@ export function NewsFeed() {
                     <span className="absolute bottom-0 right-0 w-full h-6 bg-gradient-to-t from-background to-transparent" />
                   </p>
                 </div>
-                <div className="flex items-center justify-between text-sm pt-2">
-                  <div className="flex items-center space-x-2">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-sm pt-2">
+                  <div className="flex items-center gap-2">
                     <Newspaper className="h-4 w-4 text-primary" />
                     <span className="text-primary font-medium">{item.category}</span>
-                  </div>
-                  <div className="flex items-center gap-6">
+                    <span className="text-white/50">•</span>
                     <time className="text-white/50">{item.date}</time>
-                    <span className="funding-badge px-3 py-1 rounded-full text-primary font-medium">
-                      {item.leadInvestors.join(', ')}
-                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {item.leadInvestors.map((investor, index) => (
+                      <span key={index} className="funding-badge px-2.5 py-0.5 rounded-full text-primary font-medium text-sm bg-primary/10">
+                        {investor}
+                      </span>
+                    ))}
                     {item.funding !== "Not specified" && (
-                      <span className="funding-badge px-3 py-1 rounded-full text-primary font-medium">
+                      <span className="funding-badge px-2.5 py-0.5 rounded-full text-primary font-medium text-sm bg-primary/10">
                         {item.funding}
                       </span>
                     )}

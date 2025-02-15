@@ -103,17 +103,19 @@ export function NewsFeed() {
         const data = await response.json();
         
         // Transform the API response to match our UI structure
-        const transformedData = data.response.news_items.map((item: any, index: number) => ({
-          id: index + 1,
-          title: `${item.company_name} Secures ${item.funding_amount} in ${item.funding_round}`,
-          description: item.original_content,
-          category: item.industry_focus,
-          date: new Date(item.published_date).toISOString().split('T')[0],
-          funding: item.funding_amount,
-          image: `https://images.unsplash.com/photo-${1676299081847 + index}-824916de7e0a?w=800&auto=format&fit=crop&q=60`,
-          leadInvestors: item.lead_investors,
-          sourceUrl: item.source_url
-        }));
+        const transformedData = data.response.news_items
+          .map((item: any, index: number) => ({
+            id: index + 1,
+            title: `${item.company_name} Secures ${item.funding_amount} in ${item.funding_round}`,
+            description: item.original_content,
+            category: item.industry_focus,
+            date: new Date(item.published_date).toISOString().split('T')[0],
+            funding: item.funding_amount,
+            image: `https://images.unsplash.com/photo-${1676299081847 + index}-824916de7e0a?w=800&auto=format&fit=crop&q=60`,
+            leadInvestors: item.lead_investors,
+            sourceUrl: item.source_url
+          }))
+          .sort((a: NewsItem, b: NewsItem) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Sort by date, newest first
         
         // Update state and cache
         setNews(transformedData);

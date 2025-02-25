@@ -10,7 +10,11 @@ interface NewsItem {
   description: string;
   category: string;
   date: string;
+  publishedDate: string;
+  lastModified: string;
   funding: string;
+  fundingRound: string;
+  companyName: string;
   image: string;
   leadInvestors: string[];
   sourceUrl: string;
@@ -106,16 +110,23 @@ export function NewsFeed() {
         const transformedData = data.response.news_items
           .map((item: any, index: number) => ({
             id: index + 1,
+            companyName: item.company_name,
             title: `${item.company_name} Secures ${item.funding_amount} in ${item.funding_round}`,
             description: item.original_content,
             category: item.industry_focus,
             date: new Date(item.published_date).toISOString().split('T')[0],
+            publishedDate: item.published_date,
+            lastModified: item.last_modified,
             funding: item.funding_amount,
+            fundingRound: item.funding_round,
             image: `https://images.unsplash.com/photo-${1676299081847 + index}-824916de7e0a?w=800&auto=format&fit=crop&q=60`,
-            leadInvestors: item.lead_investors,
+            leadInvestors: item.lead_investors || [],
             sourceUrl: item.source_url
           }))
-          .sort((a: NewsItem, b: NewsItem) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Sort by date, newest first
+          .sort((a: NewsItem, b: NewsItem) => {
+            // Sort by last_modified, newest first
+            return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime();
+          });
         
         // Update state and cache
         setNews(transformedData);
@@ -180,7 +191,13 @@ export function NewsFeed() {
                       <Newspaper className="h-4 w-4 text-primary shrink-0" />
                       <span className="text-primary font-medium">{item.category}</span>
                     </div>
-                    <time className="text-white/50">{item.date}</time>
+                    <time className="text-white/50">
+                      {new Date(item.lastModified).toLocaleDateString(undefined, {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </time>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {item.leadInvestors.map((investor, index) => (
@@ -191,6 +208,11 @@ export function NewsFeed() {
                     {item.funding !== "Not specified" && (
                       <span className="funding-badge px-2.5 py-1 rounded-full text-primary font-medium text-sm bg-primary/10 whitespace-nowrap">
                         {item.funding}
+                      </span>
+                    )}
+                    {item.fundingRound && item.fundingRound !== "N/A" && (
+                      <span className="funding-badge px-2.5 py-1 rounded-full text-primary font-medium text-sm bg-primary/10 whitespace-nowrap">
+                        {item.fundingRound}
                       </span>
                     )}
                   </div>

@@ -111,7 +111,9 @@ export function NewsFeed() {
           .map((item: any, index: number) => ({
             id: index + 1,
             companyName: item.company_name,
-            title: `${item.company_name} Secures ${item.funding_amount} in ${item.funding_round}`,
+            title: item.original_content.length > 100 
+              ? item.original_content.substring(0, 100).trim() + '...'
+              : item.original_content.trim(),
             description: item.original_content,
             category: item.industry_focus,
             date: new Date(item.published_date).toISOString().split('T')[0],
@@ -169,7 +171,7 @@ export function NewsFeed() {
             <div className="flex flex-col p-4 sm:p-6">
               <div className="w-full space-y-3">
                 <div className="space-y-2">
-                  <h3 className="text-lg sm:text-xl font-semibold leading-tight">
+                  <h3 className="text-lg sm:text-xl font-semibold leading-tight line-clamp-1">
                     <a 
                       href={item.sourceUrl}
                       target="_blank"
@@ -177,7 +179,7 @@ export function NewsFeed() {
                       className="hover:text-primary transition-colors inline-flex items-center gap-2"
                     >
                       {item.title}
-                      <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                     </a>
                   </h3>
                   <p className="text-white/70 text-sm sm:text-base leading-relaxed line-clamp-2 sm:line-clamp-3 overflow-hidden relative">

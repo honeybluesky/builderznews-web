@@ -89,20 +89,6 @@ export function NewsFeed() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        // Try to get from session storage first
-        const cachedNews = sessionStorage.getItem('news');
-        const cachedTimestamp = sessionStorage.getItem('newsTimestamp');
-        
-        // Check if we have valid cached data less than 1 hour old
-        if (cachedNews && cachedTimestamp) {
-          const timestamp = parseInt(cachedTimestamp);
-          if (Date.now() - timestamp < 3600000) { // 1 hour
-            setNews(JSON.parse(cachedNews));
-            setIsLoading(false);
-            return;
-          }
-        }
-
         // If no valid cache, fetch new data
         let allNews: NewsItem[] = [];
         let nextToken = null;
@@ -188,10 +174,6 @@ export function NewsFeed() {
             if (isLoadingMore) {
               setIsLoadingMore(false);
             }
-            
-            // Update cache
-            sessionStorage.setItem('news', JSON.stringify(allNews));
-            sessionStorage.setItem('newsTimestamp', Date.now().toString());
           }
           
           // Check if we should continue fetching

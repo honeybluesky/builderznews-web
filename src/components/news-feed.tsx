@@ -58,6 +58,7 @@ const VC_FIRMS = [
 export function NewsFeed() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [currentVCIndex, setCurrentVCIndex] = useState(0);
   const [shuffledVCFirms, setShuffledVCFirms] = useState<string[]>([]);
 
@@ -103,41 +104,113 @@ export function NewsFeed() {
         }
 
         // If no valid cache, fetch new data
-        const response = await fetch('https://wak4ubboy5.execute-api.us-east-1.amazonaws.com/recent_news?range=last_2_weeks');
-        const data = await response.json();
+        let allNews: NewsItem[] = [];
+        let nextToken = null;
+        let hasMore = true;
         
-        // Transform the API response to match our UI structure
-        const transformedData = data.response.news_items
-          .map((item: any, index: number) => ({
-            id: index + 1,
-            companyName: item.company_name,
-            title: item.original_content.length > 100 
-              ? item.original_content.substring(0, 100).trim() + '...'
-              : item.original_content.trim(),
-            description: item.original_content,
-            category: item.industry_focus,
-            date: new Date(item.published_date).toISOString().split('T')[0],
-            publishedDate: item.published_date,
-            lastModified: item.last_modified,
-            funding: item.funding_amount,
-            fundingRound: item.funding_round,
-            image: `https://images.unsplash.com/photo-${1676299081847 + index}-824916de7e0a?w=800&auto=format&fit=crop&q=60`,
-            leadInvestors: item.lead_investors || [],
-            sourceUrl: item.source_url
-          }))
-          .sort((a: NewsItem, b: NewsItem) => {
-            // Sort by last_modified, newest first
-            return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime();
+        // Calculate date 2 days ago for comparison
+        const twoDaysAgo = new Date();
+        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+        twoDaysAgo.setHours(0, 0, 0, 0); // Start of the day
+        
+        // Initialize with first page request
+        let url = 'https://wak4ubboy5.execute-api.us-east-1.amazonaws.com/recent_news?range=last_3_days&per_page=5';
+        
+        // Initial loading state
+        setIsLoading(true);
+        
+        // Continue fetching pages while there are more results
+        while (hasMore) {
+          // Add the next token if we have one
+          if (nextToken) {
+            url = `https://wak4ubboy5.execute-api.us-east-1.amazonaws.com/recent_news?range=last_3_days&per_page=5&next_token=${encodeURIComponent(JSON.stringify(nextToken))}`;
+            setIsLoadingMore(true);
+          }
+          
+          const response = await fetch(url);
+          const data = await response.json();
+          
+          // Check if we have items and if we've reached the 2-day limit
+          let shouldStopFetching = false;
+          
+          // Transform current page of news items
+          const pageNews = data.response.news_items
+            .map((item: any, index: number) => {
+              // Check if this item is older than 2 days
+              const itemDate = new Date(item.published_date);
+              if (itemDate < twoDaysAgo) {
+                shouldStopFetching = true;
+              }
+              
+              return {
+                id: allNews.length + index + 1,
+                companyName: item.company_name,
+                title: item.original_content.length > 100 
+                  ? item.original_content.substring(0, 100).trim() + '...'
+                  : item.original_content.trim(),
+                description: item.original_content,
+                category: item.industry_focus,
+                date: new Date(item.published_date).toISOString().split('T')[0],
+                publishedDate: item.published_date,
+                lastModified: item.last_modified,
+                funding: item.funding_amount,
+                fundingRound: item.funding_round,
+                image: `https://images.unsplash.com/photo-${1676299081847 + (allNews.length + index)}-824916de7e0a?w=800&auto=format&fit=crop&q=60`,
+                leadInvestors: item.lead_investors || [],
+                sourceUrl: item.source_url
+              };
+            });
+          
+          // Filter out items older than 2 days
+          const filteredPageNews = pageNews.filter((item: NewsItem) => {
+            return new Date(item.publishedDate) >= twoDaysAgo;
           });
+          
+          // Add current page to all news
+          if (filteredPageNews.length > 0) {
+            allNews = [...allNews, ...filteredPageNews];
+            
+            // Sort all fetched news
+            allNews.sort((a: NewsItem, b: NewsItem) => {
+              // Sort by last_modified, newest first
+              return new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime();
+            });
+            
+            // Update state to show results incrementally
+            setNews([...allNews]);
+            
+            // If this is the first batch, exit loading state
+            if (isLoading) {
+              setIsLoading(false);
+            }
+            
+            // If loading more, exit that state
+            if (isLoadingMore) {
+              setIsLoadingMore(false);
+            }
+            
+            // Update cache
+            sessionStorage.setItem('news', JSON.stringify(allNews));
+            sessionStorage.setItem('newsTimestamp', Date.now().toString());
+          }
+          
+          // Check if we should continue fetching
+          hasMore = data.has_more && !shouldStopFetching && filteredPageNews.length > 0;
+          nextToken = data.next_token;
+          
+          // Safety check - don't load more than 20 pages (100 items) to avoid potential infinite loops
+          if (allNews.length >= 100) {
+            break;
+          }
+        }
         
-        // Update state and cache
-        setNews(transformedData);
-        sessionStorage.setItem('news', JSON.stringify(transformedData));
-        sessionStorage.setItem('newsTimestamp', Date.now().toString());
+        // Ensure we exit loading states if we didn't get any news or if the loop exited
+        setIsLoading(false);
+        setIsLoadingMore(false);
       } catch (error) {
         console.error('Error fetching news:', error);
-      } finally {
         setIsLoading(false);
+        setIsLoadingMore(false);
       }
     };
 
@@ -163,66 +236,73 @@ export function NewsFeed() {
           </div>
         </div>
       ) : (
-        news.map((item) => (
-          <Card 
-            key={item.id} 
-            className="gradient-card hover:scale-[1.01] transition-all duration-300 cursor-pointer overflow-hidden relative group animate-fade-in"
-          >
-            <div className="flex flex-col p-4 sm:p-6">
-              <div className="w-full space-y-3">
-                <div className="space-y-2">
-                  <h3 className="text-lg sm:text-xl font-semibold leading-tight line-clamp-1">
-                    <a 
-                      href={item.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-primary transition-colors inline-flex items-center gap-2"
-                    >
-                      {item.title}
-                      <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                    </a>
-                  </h3>
-                  <p className="text-white/70 text-sm sm:text-base leading-relaxed line-clamp-2 sm:line-clamp-3 overflow-hidden relative">
-                    {item.description}
-                    <span className="absolute bottom-0 right-0 w-full h-6 bg-gradient-to-t from-background to-transparent" />
-                  </p>
-                </div>
-                <div className="flex flex-col gap-3 text-sm pt-1">
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <div className="flex items-center gap-2">
-                      <Newspaper className="h-4 w-4 text-primary shrink-0" />
-                      <span className="text-primary font-medium">{item.category}</span>
-                    </div>
-                    <time className="text-white/50">
-                      {new Date(item.lastModified).toLocaleDateString(undefined, {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
-                    </time>
+        <>
+          {news.map((item) => (
+            <Card 
+              key={item.id} 
+              className="gradient-card hover:scale-[1.01] transition-all duration-300 cursor-pointer overflow-hidden relative group animate-fade-in"
+            >
+              <div className="flex flex-col p-4 sm:p-6">
+                <div className="w-full space-y-3">
+                  <div className="space-y-2">
+                    <h3 className="text-lg sm:text-xl font-semibold leading-tight line-clamp-1">
+                      <a 
+                        href={item.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-primary transition-colors inline-flex items-center gap-2"
+                      >
+                        {item.title}
+                        <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                      </a>
+                    </h3>
+                    <p className="text-white/70 text-sm sm:text-base leading-relaxed line-clamp-2 sm:line-clamp-3 overflow-hidden relative">
+                      {item.description}
+                      <span className="absolute bottom-0 right-0 w-full h-6 bg-gradient-to-t from-background to-transparent" />
+                    </p>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {item.leadInvestors.map((investor, index) => (
-                      <span key={index} className="funding-badge px-2.5 py-1 rounded-full text-primary font-medium text-sm bg-primary/10 whitespace-nowrap">
-                        {investor}
-                      </span>
-                    ))}
-                    {item.funding !== "Not specified" && (
-                      <span className="funding-badge px-2.5 py-1 rounded-full text-primary font-medium text-sm bg-primary/10 whitespace-nowrap">
-                        {item.funding}
-                      </span>
-                    )}
-                    {item.fundingRound && item.fundingRound !== "N/A" && (
-                      <span className="funding-badge px-2.5 py-1 rounded-full text-primary font-medium text-sm bg-primary/10 whitespace-nowrap">
-                        {item.fundingRound}
-                      </span>
-                    )}
+                  <div className="flex flex-col gap-3 text-sm pt-1">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <div className="flex items-center gap-2">
+                        <Newspaper className="h-4 w-4 text-primary shrink-0" />
+                        <span className="text-primary font-medium">{item.category}</span>
+                      </div>
+                      <time className="text-white/50">
+                        {new Date(item.lastModified).toLocaleDateString(undefined, {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </time>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {item.leadInvestors.map((investor, index) => (
+                        <span key={index} className="funding-badge px-2.5 py-1 rounded-full text-primary font-medium text-sm bg-primary/10 whitespace-nowrap">
+                          {investor}
+                        </span>
+                      ))}
+                      {item.funding !== "Not specified" && (
+                        <span className="funding-badge px-2.5 py-1 rounded-full text-primary font-medium text-sm bg-primary/10 whitespace-nowrap">
+                          {item.funding}
+                        </span>
+                      )}
+                      {item.fundingRound && item.fundingRound !== "N/A" && (
+                        <span className="funding-badge px-2.5 py-1 rounded-full text-primary font-medium text-sm bg-primary/10 whitespace-nowrap">
+                          {item.fundingRound}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
+            </Card>
+          ))}
+          {isLoadingMore && (
+            <div className="flex justify-center py-4">
+              <Loader2 className="h-6 w-6 text-primary animate-spin" />
             </div>
-          </Card>
-        ))
+          )}
+        </>
       )}
     </div>
   );

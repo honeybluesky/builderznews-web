@@ -177,7 +177,7 @@ export function NewsFeed() {
           }
           
           // Check if we should continue fetching
-          hasMore = data.has_more && !shouldStopFetching && filteredPageNews.length > 0;
+          hasMore = data.has_more && !shouldStopFetching;
           nextToken = data.next_token;
           
           // Safety check - don't load more than 20 pages (100 items) to avoid potential infinite loops

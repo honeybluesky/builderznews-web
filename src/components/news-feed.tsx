@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Newspaper, ExternalLink, Loader2 } from "lucide-react";
+import { config } from "@/lib/config";
 
 interface NewsItem {
   id: number;
@@ -100,7 +101,7 @@ export function NewsFeed() {
         twoDaysAgo.setHours(0, 0, 0, 0); // Start of the day
         
         // Initialize with first page request
-        let url = 'https://wak4ubboy5.execute-api.us-east-1.amazonaws.com/recent_news?range=last_3_days&per_page=5';
+        let url = `${config.api.baseUrl}/recent_news?range=last_3_days&per_page=5`;
         
         // Initial loading state
         setIsLoading(true);
@@ -109,7 +110,7 @@ export function NewsFeed() {
         while (hasMore) {
           // Add the next token if we have one
           if (nextToken) {
-            url = `https://wak4ubboy5.execute-api.us-east-1.amazonaws.com/recent_news?range=last_3_days&per_page=5&next_token=${encodeURIComponent(JSON.stringify(nextToken))}`;
+            url = `${config.api.baseUrl}/recent_news?range=last_3_days&per_page=5&next_token=${encodeURIComponent(JSON.stringify(nextToken))}`;
             setIsLoadingMore(true);
           }
           
